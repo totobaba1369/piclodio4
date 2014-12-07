@@ -11,14 +11,13 @@ Prerequisites
 Django Framework
 
 ```
-sudo pip install Django==1.6
+sudo pip install Django==1.7.1
 ```
 
-or
+or download the last tarball from the offical website and then install it
 
 ```
-wget https://www.djangoproject.com/download/1.6/tarball/
-tar xzf Django-1.6.tar.gz
+tar xzf Django-1.7.1.tar.gz
 sudo python setup.py install
 ```
 
