@@ -9,17 +9,17 @@ sys.path.append(SITE_ROOT)
 from webgui.models import *
 
 print SITE_ROOT
-#Getting Alarmclock object from database
+# Getting Alarmclock object from database
 acid = sys.argv[1]
 ac = Alarmclock.objects.get(id=acid)
 
-#Check if autosnooze activated
+# Check if autosnooze activated
 snooze = ac.snooze
 if snooze != 0:
     cmd = 'echo "sudo /usr/bin/killall mplayer" |sudo /usr/bin/at "now +'+str(snooze)+' minute"'
     p = subprocess.Popen(cmd, shell=True)
 
-#Play the radio
+# Play the radio
 player = Player()
 radio = ac.webradio
 player.play(radio)

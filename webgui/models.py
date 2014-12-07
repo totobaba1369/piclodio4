@@ -11,7 +11,7 @@ class Webradio(models.Model):
     id = models.IntegerField(primary_key=True, blank=True)
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
-    selected = models.BooleanField()  # is the webradio selected to be played
+    selected = models.BooleanField(default=False)  # is the webradio selected to be played
     
 
 class Alarmclock(models.Model):
@@ -20,7 +20,7 @@ class Alarmclock(models.Model):
     hour = models.IntegerField(blank=True)
     minute = models.IntegerField(blank=True)
     period = models.CharField(max_length=100)    # cron syntax dow (day of week)
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
     snooze = models.IntegerField(blank=True)
     webradio = models.ForeignKey(Webradio)
 
