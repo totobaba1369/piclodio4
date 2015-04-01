@@ -2,13 +2,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from webgui.models import Webradio, Player, Alarmclock
 from webgui.forms import WebradioForm
-import time
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import json
 import os
 import subprocess
-from time import gmtime, strftime
+from time import strftime
 
 
 def homepage(request):
@@ -55,17 +54,17 @@ def addwebradio(request):
     return render(request, 'addwebradio.html', {'form': form})
 
 
-def deleteWebRadio(request, id):
-    radio = Webradio.objects.get(id=id)
+def delete_web_radio(request, id_radio):
+    radio = Webradio.objects.get(id=id_radio)
     radio.delete()
     return redirect('webgui.views.webradio')
 
 
 def options(request):
-    scriptPath = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    currentVolume = subprocess.check_output([scriptPath, "--getLevel"])
-    currentMute = subprocess.check_output([scriptPath, "--getSwitch"])
-    return render(request,'options.html', {'currentVolume':currentVolume,'currentMute':currentMute})
+    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
+    current_volume = subprocess.check_output([script_path, "--getLevel"])
+    current_mute = subprocess.check_output([script_path, "--getSwitch"])
+    return render(request, 'options.html', {'currentVolume': current_volume, 'currentMute': current_mute})
 
 
 def debug(request):
@@ -73,7 +72,7 @@ def debug(request):
     return render(request, 'debug.html', {'todisplay': todisplay})
 
 
-def play(request, id):
+def play(request, id_radio):
     # get actual selected radio if exist
     try:
         selectedradio = Webradio.objects.get(selected=1)
@@ -81,10 +80,10 @@ def play(request, id):
         selectedradio.selected = False
         selectedradio.save()
     except Webradio.DoesNotExist:
-        selectedradio = None    
+        pass
     
     # set the new selected radio
-    radio = Webradio.objects.get(id=id)
+    radio = Webradio.objects.get(id=id_radio)
     radio.selected = True
     radio.save()
     player = Player()
@@ -100,8 +99,8 @@ def stop(request):
     
 
 def alarmclock(request):
-    listAlarm = Alarmclock.objects.all()
-    return render(request, 'alarmclock.html',{'listAlarm': listAlarm})
+    list_alarm = Alarmclock.objects.all()
+    return render(request, 'alarmclock.html', {'listAlarm': list_alarm})
 
 
 def activeAlarmClock(request, id):
@@ -162,32 +161,32 @@ def addalarmclock(request):
                                                       'listradio': listradio})
 
 
-def deleteAlarmClock(request, id):
-    alarmclock = Alarmclock.objects.get(id=id)
-    alarmclock.disable()
-    alarmclock.delete()
+def deleteAlarmClock(request, id_alarmclock):
+    target_alarmclock = Alarmclock.objects.get(id=id_alarmclock)
+    target_alarmclock.disable()
+    target_alarmclock.delete()
     return redirect('webgui.views.alarmclock')
 
 
 def volumeup(request, count):
-    scriptPath = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([scriptPath, "--up", count])
+    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
+    subprocess.call([script_path, "--up", count])
     return redirect('webgui.views.options')
 
 
 def volumedown(request, count):
-    scriptPath = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([scriptPath, "--down", count])
+    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
+    subprocess.call([script_path, "--down", count])
     return redirect('webgui.views.options')
 
 
 def volumeset(request, volume):
-    scriptPath = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([scriptPath, "--setLevel", volume])
+    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
+    subprocess.call([script_path, "--setLevel", volume])
     return redirect('webgui.views.options')
 
 
 def volumetmute(request):
-    scriptPath = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([scriptPath, "--toggleSwitch"])
+    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
+    subprocess.call([script_path, "--toggleSwitch"])
     return redirect('webgui.views.options')
