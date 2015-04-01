@@ -17,6 +17,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Play</th>
+                        <th>Edit</th>
                         <th>Delete</th>
                         
                     </tr>
@@ -30,6 +31,11 @@
                             <th>
                                <a href="{% url 'webgui.views.play' radio.id %}" style="margin-bottom: 3px" type="button" class="btn btn-primary btn-sm">
                                     <span class="glyphicon glyphicon-play"></span>
+                               </a>
+                            </th>
+                            <th>
+                               <a href="{% url 'webgui.views.update_webradio' radio.id %}" style="margin-bottom: 3px" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-edit"></span>
                                </a>
                             </th>
                             <th>

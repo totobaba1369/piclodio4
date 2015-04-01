@@ -10,7 +10,7 @@
     
     <div class="container">
         <div class="page-header">
-          <h1>Add new web radio</h1>
+          <h1>Update web radio</h1>
         </div>
 
         {% if form.errors %}
@@ -22,7 +22,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <form class="form-horizontal" action="{% url 'webgui.views.addwebradio' %}" method="post">{% csrf_token %}
+        <form class="form-horizontal" action="{% url 'webgui.views.update_webradio' radio.id %}" method="post">{% csrf_token %}
 
             {% for field in form %}
                 <div class="form-group {% if field.errors %}has-error{% endif %}">
@@ -40,7 +40,7 @@
                     <!-- validate button -->
                     <button class="btn btn-success" type="submit">
                         <span class="glyphicon glyphicon-ok"></span>
-                        Add the webradio
+                        Update the webradio
                     </button>
 
                 </div>

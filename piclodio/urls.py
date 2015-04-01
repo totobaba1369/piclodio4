@@ -25,4 +25,5 @@ urlpatterns = patterns('',
     url(r'^volume/up/(\d+)/$','webgui.views.volumeup'),
     url(r'^volume/down/(\d+)/$','webgui.views.volumedown'),
     url(r'^volume/tmute/$','webgui.views.volumetmute'),
+    url(r'^update_webradio/(\d+)/$','webgui.views.update_webradio'),
 )

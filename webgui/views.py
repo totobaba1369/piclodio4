@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from webgui.models import Webradio, Player, Alarmclock
 from webgui.forms import WebradioForm
 import time
@@ -30,6 +30,15 @@ def webradio(request):
     listradio = Webradio.objects.all()
     return render(request, 'webradio.html', {'listradio': listradio})
 
+
+def update_webradio(request, id_webradio):
+    selected_webradio = get_object_or_404(Webradio, id=id_webradio)
+    form = WebradioForm(request.POST or None, instance=selected_webradio)
+    if form.is_valid():
+        form.save()
+        return redirect('webgui.views.webradio')
+
+    return render(request, 'update_webradio.html', {'form': form, 'radio': selected_webradio})
 
 def addwebradio(request):
     if request.method == 'POST':  # If the form has been submitted...
