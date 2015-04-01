@@ -3,7 +3,6 @@ from django import forms
 from webgui.models import Webradio
 
 
-
 class WebradioForm(forms.ModelForm):
     name = forms.CharField(label="Name",
                            min_length=2,
