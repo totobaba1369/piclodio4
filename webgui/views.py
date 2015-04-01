@@ -40,6 +40,7 @@ def update_webradio(request, id_webradio):
 
     return render(request, 'update_webradio.html', {'form': form, 'radio': selected_webradio})
 
+
 def addwebradio(request):
     if request.method == 'POST':  # If the form has been submitted...
         form = WebradioForm(request.POST)  # A form bound to the POST data
@@ -49,7 +50,7 @@ def addwebradio(request):
             form.save()
             return redirect('webgui.views.webradio')
     else:
-        form = WebradioForm() # An unbound form
+        form = WebradioForm()
 
     return render(request, 'addwebradio.html', {'form': form})
 
@@ -69,7 +70,7 @@ def options(request):
 
 def debug(request):
     todisplay = 'hello world debug'
-    return render(request,'debug.html', {'todisplay':todisplay})
+    return render(request, 'debug.html', {'todisplay': todisplay})
 
 
 def play(request, id):
@@ -89,22 +90,12 @@ def play(request, id):
     player = Player()
     player.play(radio)
 
-    time.sleep(2)
-
-    if not player.isStarted():  # then start the backup mp3
-        player = Player()
-        radio = Webradio
-        radio.url = 'mplayer backup.mp3'
-        player.play(radio)
-
     return redirect('webgui.views.homepage')
 
 
 def stop(request):
     player = Player()
     player.stop()
-    # sleep to be sure the process have been killed
-    time.sleep(1)
     return redirect('webgui.views.homepage')
     
 
