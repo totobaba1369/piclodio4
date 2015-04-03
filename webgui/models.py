@@ -1,10 +1,9 @@
 from django.db import models
-import subprocess
+import subprocess, threading
 import os
 import string
 from webgui.crontab import *
-import threading
-import time
+
 
 
 class Webradio(models.Model):
@@ -64,7 +63,9 @@ class Player():
         extension=splitUrl[sizeTab-1]
         command= self.getthegoodcommand(extension)
 
-        p = subprocess.Popen(command+radio.url, shell=True)
+        #p = subprocess.Popen(command+radio.url, shell=True)
+        player_thread = PlayerThread(command+radio.url)
+        player_thread.run(timeout=3)
 
     def stop(self):
         """
@@ -90,3 +91,32 @@ class Player():
                     return False
             else:
                     return True
+
+
+class PlayerThread(object):
+    def __init__(self, cmd):
+        self.cmd = cmd
+        self.process = None
+
+    def run(self, timeout=0):
+        def target():
+            print 'Thread started'
+            self.process = subprocess.Popen(self.cmd, shell=True)
+            self.process.communicate()
+            print 'Thread finished'
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join(timeout)
+        try:
+            if not thread.is_alive():
+                print 'Mplayer not runing after timeout'
+                self.process.terminate()
+                thread.join()
+        except OSError:
+            print "Mplayer not runing after timeout. Start backup"
+            player_thread = PlayerThread('mplayer -loop 0 backup.mp3')
+            player_thread.run(timeout=3)
+
+        print self.process.returncode

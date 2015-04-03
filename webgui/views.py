@@ -8,6 +8,10 @@ import json
 import os
 import subprocess
 from time import strftime
+import time
+import urllib
+import requests
+from contextlib import closing
 
 
 def homepage(request):
@@ -87,14 +91,25 @@ def play(request, id_radio):
     radio.selected = True
     radio.save()
     player = Player()
-    player.play(radio)
+    # check if url is available
+    try:
+        http_code = urllib.urlopen(radio.url).getcode()
+    except IOError:
+        http_code = 0
+    print http_code
+    if http_code == 200:
+        player.play(radio)
+    else:
+        # play backup MP3
+        radio.url = 'mplayer -loop 0 backup.mp3'
+        player.play(radio)
 
     return redirect('webgui.views.homepage')
-
 
 def stop(request):
     player = Player()
     player.stop()
+    time.sleep(1)
     return redirect('webgui.views.homepage')
     
 
