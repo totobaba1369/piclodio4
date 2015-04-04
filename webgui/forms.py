@@ -1,13 +1,23 @@
 from __future__ import unicode_literals
 from django import forms
 from webgui.models import Webradio, Alarmclock
-from django.core.exceptions import ValidationError
-from django.forms import  ChoiceField
+from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.utils.encoding import force_text
 
 
-class ChoiceFieldNoValidation(ChoiceField):
-    def validate(self, value):
-        pass
+class HorizontalCheckboxRenderer(forms.CheckboxSelectMultiple.renderer):
+    """
+    Make day select horizontal
+    """
+    def render(self):
+        id_ = self.attrs.get('id', None)
+        start_tag = format_html('<div id="{0}">', id_) if id_ else '<div>'
+        output = [start_tag]
+        for widget in self:
+            output.append(format_html(u'<span>{0}</span>', force_text(widget)))
+        output.append('</span></div>')
+        return mark_safe('\n'.join(output))
 
 
 class WebradioForm(forms.ModelForm):
@@ -54,11 +64,11 @@ class AlarmClockForm(forms.ModelForm):
                                required=True,
                                widget=forms.Select(attrs={'class': 'form-control input-sm'}))
 
-    period = forms.MultipleChoiceField(label="Period",
+    period = forms.MultipleChoiceField(label="Day of week",
                                        choices=choice_period,
                                        required=True,
                                        error_messages={'required': 'At least you must select one day'},
-                                       widget=forms.CheckboxSelectMultiple())
+                                       widget=forms.CheckboxSelectMultiple(renderer=HorizontalCheckboxRenderer))
 
     snooze = forms.ChoiceField(label="Auto stop",
                                choices=choice_snooze,
