@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django import forms
-from webgui.models import Webradio, Alarmclock
+from webgui.models import Webradio, Alarmclock, BackupMP3
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.utils.encoding import force_text
@@ -81,3 +81,12 @@ class AlarmClockForm(forms.ModelForm):
     class Meta:
         model = Alarmclock
         fields = ['label', 'hour', 'minute', 'period', 'snooze', 'webradio']
+
+
+class BackupMP3Form(forms.ModelForm):
+    mp3file = forms.FileField(label='MP3 backup file',
+                              required=True)
+
+    class Meta:
+        model = BackupMP3
+        fields = ['mp3file']

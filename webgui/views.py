@@ -1,11 +1,11 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404
-from webgui.models import Webradio, Player, Alarmclock
-from webgui.forms import WebradioForm, AlarmClockForm
+from webgui.models import Webradio, Player, Alarmclock, BackupMP3
+from webgui.forms import WebradioForm, AlarmClockForm, BackupMP3Form
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import json
-import os
+import os, glob
 import subprocess
 from time import strftime
 import time
@@ -65,10 +65,30 @@ def delete_web_radio(request, id_radio):
 
 
 def options(request):
+    # get sound info
     script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
     current_volume = subprocess.check_output([script_path, "--getLevel"])
     current_mute = subprocess.check_output([script_path, "--getSwitch"])
-    return render(request, 'options.html', {'currentVolume': current_volume, 'currentMute': current_mute})
+
+    # get actual mp3 backup file
+    actual_backup = _get_mp3_in_backup_folder()
+
+    if request.method == 'POST':
+        form = BackupMP3Form(request.POST, request.FILES)
+        if form.is_valid():
+            # remove backup save in database
+            BackupMP3.objects.all().delete()
+            # remove file in backup folder
+            _delete_mp3_from_backup_folder()
+            form.save()
+            return redirect('webgui.views.options')
+    else:
+        form = BackupMP3Form()
+
+    return render(request, 'options.html', {'currentVolume': current_volume,
+                                            'currentMute': current_mute,
+                                            'form': form,
+                                            'backup': actual_backup})
 
 
 def debug(request):
@@ -224,3 +244,16 @@ def _convert_period_to_crontab(period):
             period_crontab += ","
             period_crontab += str(p)
     return period_crontab
+
+
+def _get_mp3_in_backup_folder():
+    path = "backup_mp3"
+    mp3 = os.listdir(path)
+    if mp3:
+        return mp3[0]
+
+def _delete_mp3_from_backup_folder():
+    path = "backup_mp3/*"
+    filelist = glob.glob(path)
+    for f in filelist:
+        os.remove(f)
