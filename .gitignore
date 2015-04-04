@@ -6,3 +6,4 @@ piclodio.db
 piclodio/settings.py
 .idea
 newcron.txt
+backup_mp3/*
