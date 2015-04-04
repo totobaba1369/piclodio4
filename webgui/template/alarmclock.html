@@ -20,6 +20,7 @@
                         <th>Day of week</th>
                         <th>Time</th>
                         <th>Web radio</th>
+                        <th>Edit</th>
                         <th>Active</th>
                         <th>Delete</th>
                     </tr>
@@ -56,6 +57,11 @@
                             </th>
                             <th>
                                 {{alarmclock.webradio.name}}
+                            </th>
+                            <th>
+                               <a href="{% url 'webgui.views.update_alarmclock' alarmclock.id %}" style="margin-bottom: 3px" type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                               </a>
                             </th>
                             <th>
                                 <a href="{% url 'webgui.views.activeAlarmClock' alarmclock.id %}"style="margin-bottom: 3px" type="button" class="btn btn-{% if alarmclock.active == True %}primary{% else %}default{% endif %} btn-sm">

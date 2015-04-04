@@ -85,7 +85,7 @@ def play(request, id_radio):
         selectedradio.save()
     except Webradio.DoesNotExist:
         pass
-    
+
     # set the new selected radio
     radio = Webradio.objects.get(id=id_radio)
     radio.selected = True
@@ -111,7 +111,7 @@ def stop(request):
     player.stop()
     time.sleep(1)
     return redirect('webgui.views.homepage')
-    
+
 
 def alarmclock(request):
     list_alarm = Alarmclock.objects.all()
@@ -126,12 +126,12 @@ def activeAlarmClock(request, id):
     else:
         alarmclock.active = False
         alarmclock.disable()
-        
+
     alarmclock.save()
     return redirect('webgui.views.alarmclock')
 
 
-@csrf_exempt 
+@csrf_exempt
 def addalarmclock(request):
     if request.method == 'POST':
         label = request.POST['label']
@@ -140,12 +140,12 @@ def addalarmclock(request):
         snooze = request.POST['snooze']
         id_webradio = request.POST['webradio']
         dayofweek = request.POST['dayofweek']
-        
+
         # check if label not empty and days selected
         if label == "" or dayofweek == "":
             json_data = json.dumps({"HTTPRESPONSE": "error"})
             return HttpResponse(json_data, mimetype="application/json")
-        
+
         # save object in database
         alarmclock = Alarmclock()
         alarmclock.label = label
@@ -157,7 +157,7 @@ def addalarmclock(request):
         alarmclock.webradio = webradio
         alarmclock.active = True
         alarmclock.save()
-        
+
         # set the cron
         alarmclock = Alarmclock.objects.latest('id')
         alarmclock.enable()
@@ -167,7 +167,7 @@ def addalarmclock(request):
 
         json_data = json.dumps({"HTTPRESPONSE":url})
         return HttpResponse(json_data, mimetype="application/json")
-    
+
     else:  # not post, show the form
         listradio = Webradio.objects.all()
         return render(request, 'addalarmclock.html', {'rangeHour': range(24),
@@ -182,21 +182,8 @@ def create_alarmclock(request):
         if form.is_valid():  # All validation rules pass
             # convert period
             period = form.cleaned_data['period']
-            # decode unicode
-            period_decoded = [str(x) for x in period]
-
-            # transform period into crontab compatible
-            period_crontab = ""
-            first_time = True  # first time we add a value
-            for p in period_decoded:
-                if first_time:  # we do not add ","
-                    period_crontab += str(p)
-                    first_time = False
-                else:
-                    period_crontab += ","
-                    period_crontab += str(p)
-            print period_crontab
-            form.period = period_crontab
+            period_crontab = _convert_period_to_crontab()
+            form.period = _convert_period_to_crontab(period)
             # save in database
             form.save()
             # set the cron
@@ -210,6 +197,30 @@ def create_alarmclock(request):
     else:
         form = AlarmClockForm()  # An unbound form
     return render(request, 'create_alarmclock.html', {'form': form})
+
+
+def update_alarmclock(request, id_alarmclock):
+    selected_webradio = get_object_or_404(Alarmclock, id=id_alarmclock)
+    form = AlarmClockForm(request.POST or None, instance=selected_webradio)
+    if form.is_valid():
+        # convert period
+        period = form.cleaned_data['period']
+        period_crontab = _convert_period_to_crontab(period)
+        form.period = period_crontab
+        # save in database
+        form.save()
+        # set the cron
+        alarmclock = Alarmclock.objects.latest('id')
+        alarmclock.period = period_crontab
+        # disble to remove from crontab
+        alarmclock.disable()
+        # then enable to create it again
+        alarmclock.enable()
+        alarmclock.save()
+
+        return redirect('webgui.views.alarmclock')
+
+    return render(request, 'update_alarmclock.html', {'form': form, 'alarmclock': selected_webradio})
 
 
 def deleteAlarmClock(request, id_alarmclock):
@@ -241,3 +252,20 @@ def volumetmute(request):
     script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
     subprocess.call([script_path, "--toggleSwitch"])
     return redirect('webgui.views.options')
+
+
+def _convert_period_to_crontab(period):
+    # decode unicode
+    period_decoded = [str(x) for x in period]
+
+    # transform period into crontab compatible
+    period_crontab = ""
+    first_time = True  # first time we add a value
+    for p in period_decoded:
+        if first_time:  # we do not add ","
+            period_crontab += str(p)
+            first_time = False
+        else:
+            period_crontab += ","
+            period_crontab += str(p)
+    return period_crontab
