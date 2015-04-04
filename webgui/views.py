@@ -131,51 +131,6 @@ def activeAlarmClock(request, id):
     return redirect('webgui.views.alarmclock')
 
 
-@csrf_exempt
-def addalarmclock(request):
-    if request.method == 'POST':
-        label = request.POST['label']
-        hour = request.POST['hour']
-        minute = request.POST['minute']
-        snooze = request.POST['snooze']
-        id_webradio = request.POST['webradio']
-        dayofweek = request.POST['dayofweek']
-
-        # check if label not empty and days selected
-        if label == "" or dayofweek == "":
-            json_data = json.dumps({"HTTPRESPONSE": "error"})
-            return HttpResponse(json_data, mimetype="application/json")
-
-        # save object in database
-        alarmclock = Alarmclock()
-        alarmclock.label = label
-        alarmclock.hour = hour
-        alarmclock.minute = minute
-        alarmclock.period = dayofweek
-        alarmclock.snooze = snooze
-        webradio = Webradio.objects.get(id=id_webradio)
-        alarmclock.webradio = webradio
-        alarmclock.active = True
-        alarmclock.save()
-
-        # set the cron
-        alarmclock = Alarmclock.objects.latest('id')
-        alarmclock.enable()
-
-        # return the base URL of current instance
-        url = request.build_absolute_uri('alarmclock')
-
-        json_data = json.dumps({"HTTPRESPONSE":url})
-        return HttpResponse(json_data, mimetype="application/json")
-
-    else:  # not post, show the form
-        listradio = Webradio.objects.all()
-        return render(request, 'addalarmclock.html', {'rangeHour': range(24),
-                                                      'rangeMinute': range(60),
-                                                      'rangeSnooze': range(121),
-                                                      'listradio': listradio})
-
-
 def create_alarmclock(request):
     if request.method == 'POST':
         form = AlarmClockForm(request.POST)  # A form bound to the POST data
