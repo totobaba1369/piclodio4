@@ -69,6 +69,7 @@ def options(request):
     script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
     current_volume = subprocess.check_output([script_path, "--getLevel"])
     current_mute = subprocess.check_output([script_path, "--getSwitch"])
+    current_mute = current_mute.rstrip()
 
     # get actual mp3 backup file
     actual_backup = _get_mp3_in_backup_folder()
