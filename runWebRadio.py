@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
-import subprocess
-import time
+from django.core.wsgi import get_wsgi_application
 os.environ['DJANGO_SETTINGS_MODULE'] = 'piclodio.settings'
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(SITE_ROOT)
+application = get_wsgi_application()
 from webgui.models import *
 
 print SITE_ROOT
@@ -23,13 +23,3 @@ if snooze != 0:
 player = Player()
 radio = ac.webradio
 player.play(radio)
-# wait 2 seconds and then cheek if the radio is running
-time.sleep(2)
-if player.isStarted():
-    print "is alive"
-else:
-    print "not alive"
-    player = Player()
-    radio = Webradio
-    radio.url = 'mplayer -loop 0 backup.mp3'
-    player.play(radio)
