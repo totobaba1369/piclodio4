@@ -247,7 +247,7 @@ def _convert_period_to_crontab(period):
 
 
 def _get_mp3_in_backup_folder():
-    path = "backup_mp3"
+    path = os.path.dirname(os.path.abspath(__file__))+"/../backup_mp3"
     mp3 = os.listdir(path)
     if mp3:
         return mp3[0]
