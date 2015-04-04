@@ -5,12 +5,14 @@ import string
 from webgui.crontab import *
 
 
-
 class Webradio(models.Model):
     id = models.IntegerField(primary_key=True, blank=True)
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
     selected = models.BooleanField(default=False)  # is the webradio selected to be played
+
+    def __unicode__(self):
+        return u'{0}'.format(self.name)
     
 
 class Alarmclock(models.Model):

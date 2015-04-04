@@ -22,4 +22,6 @@ urlpatterns = patterns('',
     url(r'^volume/down/(\d+)/$', 'webgui.views.volumedown'),
     url(r'^volume/tmute/$', 'webgui.views.volumetmute'),
     url(r'^update_webradio/(\d+)/$', 'webgui.views.update_webradio'),
+    url(r'^create_alarmclock', 'webgui.views.create_alarmclock'),
+
 )

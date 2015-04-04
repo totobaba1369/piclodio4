@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404
 from webgui.models import Webradio, Player, Alarmclock
-from webgui.forms import WebradioForm
+from webgui.forms import WebradioForm, AlarmClockForm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import json
@@ -174,6 +174,42 @@ def addalarmclock(request):
                                                       'rangeMinute': range(60),
                                                       'rangeSnooze': range(121),
                                                       'listradio': listradio})
+
+
+def create_alarmclock(request):
+    if request.method == 'POST':
+        form = AlarmClockForm(request.POST)  # A form bound to the POST data
+        if form.is_valid():  # All validation rules pass
+            # convert period
+            period = form.cleaned_data['period']
+            # decode unicode
+            period_decoded = [str(x) for x in period]
+
+            # transform period into crontab compatible
+            period_crontab = ""
+            first_time = True  # first time we add a value
+            for p in period_decoded:
+                if first_time:  # we do not add ","
+                    period_crontab += str(p)
+                    first_time = False
+                else:
+                    period_crontab += ","
+                    period_crontab += str(p)
+            print period_crontab
+            form.period = period_crontab
+            # save in database
+            form.save()
+            # set the cron
+            alarmclock = Alarmclock.objects.latest('id')
+            alarmclock.period = period_crontab
+            alarmclock.active = True
+            alarmclock.enable()
+            alarmclock.save()
+
+            return redirect('webgui.views.alarmclock')
+    else:
+        form = AlarmClockForm()  # An unbound form
+    return render(request, 'create_alarmclock.html', {'form': form})
 
 
 def deleteAlarmClock(request, id_alarmclock):
