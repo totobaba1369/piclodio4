@@ -153,7 +153,7 @@ def create_alarmclock(request):
         if form.is_valid():  # All validation rules pass
             # convert period
             period = form.cleaned_data['period']
-            period_crontab = _convert_period_to_crontab()
+            period_crontab = _convert_period_to_crontab(period)
             form.period = _convert_period_to_crontab(period)
             # save in database
             form.save()
