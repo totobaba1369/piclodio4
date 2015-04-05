@@ -12,10 +12,10 @@
                 <legend class="scheduler-border">Volume</legend>
                 <h2>Current volume value : <span class="label label-primary">{{ currentVolume }}</span> </h2>
                 <div class="btn-group btn-group-lg btn-group-justified" style="margin-bottom:15px;">
-                    {% if currentMute == "on" %}
-                        <a href="{% url 'webgui.views.volumetmute' %}" class="btn btn-danger">Mute {{ currentMute }} <span class="glyphicon glyphicon-volume-off"></span></a>
+                    {% if currentMute == 'on' %}
+                        <a href="{% url 'webgui.views.volumetmute' %}" class="btn btn-danger">Mute</a>
                     {% else %}
-                        <a href="{% url 'webgui.views.volumetmute' %}" class="btn btn-primary">Mute {{ currentMute }} <span class="glyphicon glyphicon-volume-up"></span></a>
+                        <a href="{% url 'webgui.views.volumetmute' %}" class="btn btn-primary">Unmute</a>
                     {% endif %}
 
                 </div>

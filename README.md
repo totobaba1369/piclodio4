@@ -21,7 +21,7 @@ tar xzf Django-1.7.1.tar.gz
 sudo python setup.py install
 ```
 
-Mplayer, At, SQLite database, the web server and python module
+mplayer, at and SQLite database
 ```
 sudo apt-get install mplayer at sqlite3
 ```
@@ -38,13 +38,13 @@ Get Piclodio
 cd /home/pi
 git clone https://github.com/Sispheor/Piclodio2.git
 ```
-Copy the starter script
+Copy the init script
 ```
 sudo cp Piclodio2/init_script/piclodio.sh /etc/init.d/piclodio
 sudo chmod +x /etc/init.d/piclodio
 sudo update-rc.d piclodio defaults
 ```
-You can edit the file if you want to customise settings
+You can edit it to customise settings
 Start piclodio :
 ```
 sudo /etc/init.d/piclodio start
