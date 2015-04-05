@@ -2,16 +2,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from webgui.models import Webradio, Player, Alarmclock, BackupMP3
 from webgui.forms import WebradioForm, AlarmClockForm, BackupMP3Form
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-import json
 import os, glob
 import subprocess
 from time import strftime
 import time
 import urllib
-import requests
-from contextlib import closing
 
 
 def homepage(request):
