@@ -249,7 +249,7 @@ def _get_mp3_in_backup_folder():
         return mp3[0]
 
 def _delete_mp3_from_backup_folder():
-    path = "backup_mp3/*"
+    path = os.path.dirname(os.path.abspath(__file__))+"/../backup_mp3/*"
     filelist = glob.glob(path)
     for f in filelist:
         os.remove(f)
