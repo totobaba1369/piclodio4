@@ -49,7 +49,9 @@ That's it, you can now access your piclodio at http://youip:8000
 
 Option 2 : run piclodio with nginx
 ==========
+sudo apt-get install build-essential python-dev libxml2-dev libxslt1-dev
 
+sudo pip install uwsgi
 sudo ln -s /usr/share/nginx/Piclodio2/run_piclodio/nginx/piclodio_nginx.conf /etc/nginx/sites-enabled/
 
 
