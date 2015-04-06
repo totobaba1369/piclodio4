@@ -47,15 +47,7 @@ sudo /etc/init.d/piclodio start
 That's it, you can now access your piclodio at http://youip:8000
 
 
-Option 2 : run piclodio with nginx
-==========
-sudo apt-get install build-essential python-dev libxml2-dev libxslt1-dev
-
-sudo pip install uwsgi
-sudo ln -s /usr/share/nginx/Piclodio2/run_piclodio/nginx/piclodio_nginx.conf /etc/nginx/sites-enabled/
-
-
-Option 3 : run piclodio with apache
+Option 2 : run piclodio with apache
 ==========
 
 Prerequisites
@@ -63,20 +55,20 @@ Prerequisites
 sudo apt-get install apache2 libapache2-mod-wsgi
 ```
 
-Clone Piclodio application from github into apache document root directory
+Move Piclodio in default apache directory and give access
 ```
-cd /var/www
-git clone https://github.com/Sispheor/Piclodio2.git
+sudo mv /home/pi/Piclodio2 /var/www
+sudo chown -R www-data: /var/www/Piclodio2
 ```
 
 Copy vHost from sources folder into apache vHost configuration folder
 ```
-cp /var/www/Piclodio2/apache.piclodio.conf /etc/apache2/sites-available/
+sudo cp /var/www/Piclodio2/run_piclodio/apache/piclodio.conf /etc/apache2/sites-available/piclodio
 ```
 
 Enable the vHost
 ```
-a2ensite piclodio
+sudo a2ensite piclodio
 ```
 And last, we have to allow the Apache user www-data to use mplayer. Edit the sudoers file with the command
 ```
@@ -86,7 +78,18 @@ and add this line at the end of the file
 ```
 www-data ALL=NOPASSWD:/usr/bin/mplayer* ,/usr/bin/pgrep mplayer ,/usr/bin/killall mplayer, /usr/bin/at
 ```
+Reload Apache
+```
+sudo service apache2 reload
+```
 
-That's it! Piclodio is now available on it IP adresse.
+That's it! Piclodio is now available on it IP adresse on http://RPI_IP_ADDRESS/piclodio
 
+
+Option 3 : run piclodio with nginx
 ==========
+
+DRAFT
+sudo apt-get install nginx uwsgi
+
+sudo ln -s /usr/share/nginx/Piclodio2/run_piclodio/nginx/piclodio_nginx.conf /etc/nginx/sites-enabled/
