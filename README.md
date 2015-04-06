@@ -8,7 +8,7 @@ Piclodio2 is a web radio player and a also an alarm clock. You can add url strea
 Prerequisites
 ==========
 
-**pip** for python dependencies, **Mplayer** to play stream, **at** to stop alamr clock automaticaly, **sqlite3** to store data and **git** to clone the project
+**pip** for python dependencies, **Mplayer** to play stream, **at** to stop alarm clock automatically, **sqlite3** to store data and **git** to clone the project
 
 ```
 sudo apt-get install python-pip mplayer at sqlite3 git
@@ -20,13 +20,11 @@ Install Django framework from pip
 sudo pip install Django==1.7.7
 ```
 
-Clone the project.
+Clone the project. Notice we not use sudo here. The folder has to belong to the Pi user.
 ```
 cd /home/pi
 git clone https://github.com/Sispheor/Piclodio2.git
 ```
-
-
 
 Option 1 : use django's server to run piclodio
 ==========
