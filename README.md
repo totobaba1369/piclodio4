@@ -47,7 +47,13 @@ sudo /etc/init.d/piclodio start
 That's it, you can now access your piclodio at http://youip:8000
 
 
-Option 2 : run piclodio with apache
+Option 2 : run piclodio with nginx
+==========
+
+sudo ln -s /usr/share/nginx/Piclodio2/run_piclodio/nginx/piclodio_nginx.conf /etc/nginx/sites-enabled/
+
+
+Option 3 : run piclodio with apache
 ==========
 
 Prerequisites
