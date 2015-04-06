@@ -35,7 +35,7 @@ As pi user :
 
 Copy the init script
 ```
-sudo cp Piclodio2/init_script/piclodio.sh /etc/init.d/piclodio
+sudo cp Piclodio2/run_piclodio/init_script/piclodio.sh /etc/init.d/piclodio
 sudo chmod +x /etc/init.d/piclodio
 sudo update-rc.d piclodio defaults
 ```
