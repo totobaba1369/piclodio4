@@ -8,22 +8,22 @@ Piclodio2 is a web radio player and a also an alarm clock. You can add url strea
 Prerequisites
 ==========
 
-Django Framework
+**pip** for python dependencies, **Mplayer** to play stream, **at** to stop alarm clock automatically, **sqlite3** to store data and **git** to clone the project
 
 ```
-sudo pip install Django==1.7.1
+sudo apt-get install python-pip mplayer at sqlite3 git
 ```
 
-or download the last tarball from the offical website and then install it
+Install Django framework from pip
 
 ```
-tar xzf Django-1.7.1.tar.gz
-sudo python setup.py install
+sudo pip install Django==1.7.7
 ```
 
-mplayer, at and SQLite database
+Clone the project. Notice we not use sudo here. The folder has to belong to the Pi user.
 ```
-sudo apt-get install mplayer at sqlite3
+cd /home/pi
+git clone https://github.com/Sispheor/Piclodio2.git
 ```
 
 Option 1 : use django's server to run piclodio
@@ -33,14 +33,9 @@ It's not the best practice but it's easy and fast.
 
 As pi user :
 
-Get Piclodio
-```
-cd /home/pi
-git clone https://github.com/Sispheor/Piclodio2.git
-```
 Copy the init script
 ```
-sudo cp Piclodio2/init_script/piclodio.sh /etc/init.d/piclodio
+sudo cp Piclodio2/run_piclodio/init_script/piclodio.sh /etc/init.d/piclodio
 sudo chmod +x /etc/init.d/piclodio
 sudo update-rc.d piclodio defaults
 ```
@@ -60,20 +55,20 @@ Prerequisites
 sudo apt-get install apache2 libapache2-mod-wsgi
 ```
 
-Clone Piclodio application from github into apache document root directory
+Move Piclodio in default apache directory and give access
 ```
-cd /var/www
-git clone https://github.com/Sispheor/Piclodio2.git
+sudo mv /home/pi/Piclodio2 /var/www
+sudo chown -R www-data: /var/www/Piclodio2
 ```
 
 Copy vHost from sources folder into apache vHost configuration folder
 ```
-cp /var/www/Piclodio2/apache.piclodio.conf /etc/apache2/sites-available/
+sudo cp /var/www/Piclodio2/run_piclodio/apache/piclodio.conf /etc/apache2/sites-available/piclodio
 ```
 
 Enable the vHost
 ```
-a2ensite piclodio
+sudo a2ensite piclodio
 ```
 And last, we have to allow the Apache user www-data to use mplayer. Edit the sudoers file with the command
 ```
@@ -83,7 +78,18 @@ and add this line at the end of the file
 ```
 www-data ALL=NOPASSWD:/usr/bin/mplayer* ,/usr/bin/pgrep mplayer ,/usr/bin/killall mplayer, /usr/bin/at
 ```
+Reload Apache
+```
+sudo service apache2 reload
+```
 
-That's it! Piclodio is now available on it IP adresse.
+That's it! Piclodio is now available on it IP adresse on http://RPI_IP_ADDRESS/piclodio
 
+
+Option 3 : run piclodio with nginx
 ==========
+
+DRAFT
+sudo apt-get install nginx uwsgi
+
+sudo ln -s /usr/share/nginx/Piclodio2/run_piclodio/nginx/piclodio_nginx.conf /etc/nginx/sites-enabled/
