@@ -8,6 +8,7 @@ from django.db.models import FileField
 from django.forms import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 class ContentTypeRestrictedFileField(FileField):
     """
@@ -135,7 +136,7 @@ class Player():
 
 
 class BackupMP3(models.Model):
-    mp3file = ContentTypeRestrictedFileField(upload_to='backup_mp3',
+    mp3file = ContentTypeRestrictedFileField(upload_to=settings.BACKUP_ROOT,
                                              content_types=['audio/mp3',
                                                             'audio/mpeg'],
                                              max_upload_size=214958080
