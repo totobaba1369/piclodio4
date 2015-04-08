@@ -117,7 +117,7 @@ def play(request, id_radio):
         player.play(radio)
     else:
         # play backup MP3
-        radio.url = 'mplayer -loop 0 backup.mp3'
+        radio.url = 'mplayer backup_mp3/*'
         player.play(radio)
 
     return redirect('webgui.views.homepage')
