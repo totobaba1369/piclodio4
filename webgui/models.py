@@ -101,14 +101,12 @@ class Player():
             self.stop()
 
         url = radio.url  # get the url
-        splitUrl =string.split(url, ".")
-        sizeTab= len(splitUrl)
-        extension=splitUrl[sizeTab-1]
-        command= self.getthegoodcommand(extension)
+        split_url = string.split(url, ".")
+        size_tab = len(split_url)
+        extension = split_url[size_tab-1]
+        command = self.getthegoodcommand(extension)
 
-        #p = subprocess.Popen(command+radio.url, shell=True)
-        player_thread = PlayerThread(command+radio.url)
-        player_thread.run(timeout=3)
+        subprocess.Popen(command+radio.url, shell=True)
 
     def stop(self):
         """
@@ -142,36 +140,6 @@ class BackupMP3(models.Model):
                                                             'audio/mpeg'],
                                              max_upload_size=214958080
                                              )
-
-
-class PlayerThread(object):
-    def __init__(self, cmd):
-        self.cmd = cmd
-        self.process = None
-
-    def run(self, timeout=0):
-        def target():
-            print 'Thread started'
-            self.process = subprocess.Popen(self.cmd, shell=True)
-            self.process.communicate()
-            print 'Thread finished'
-
-        thread = threading.Thread(target=target)
-        thread.start()
-
-        thread.join(timeout)
-        try:
-            if not thread.is_alive():
-                print 'Mplayer not runing after timeout'
-                self.process.terminate()
-                thread.join()
-        except OSError:
-            print "Mplayer not runing after timeout. Start backup"
-            if _backup_exist():
-                player_thread = PlayerThread('mplayer -loop 0 backup_mp3/*')
-                player_thread.run(timeout=3)
-
-        print self.process.returncode
 
 
 def _backup_exist():
