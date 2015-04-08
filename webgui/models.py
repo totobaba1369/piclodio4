@@ -140,11 +140,3 @@ class BackupMP3(models.Model):
                                                             'audio/mpeg'],
                                              max_upload_size=214958080
                                              )
-
-
-def _backup_exist():
-    path = "backup_mp3/*"
-    filelist = glob.glob(path)
-    if filelist:
-        return True
-    return False
