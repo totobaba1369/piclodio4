@@ -8,10 +8,10 @@ Piclodio2 is a web radio player and a also an alarm clock. You can add url strea
 Prerequisites
 ==========
 
-**pip** for python dependencies, **Mplayer** to play stream, **at** to stop alarm clock automatically, **sqlite3** to store data and **git** to clone the project
+**pip** for python dependencies, **Mplayer** to play stream, **at** to stop alarm clock automatically, **sqlite3** to store data, **git** to clone the project and **python-alsaaudio** to manage sound
 
 ```
-sudo apt-get install python-pip mplayer at sqlite3 git
+sudo apt-get install python-pip mplayer at sqlite3 git python-alsaaudio
 ```
 
 Install Django framework from pip
@@ -20,13 +20,13 @@ Install Django framework from pip
 sudo pip install Django==1.7.7
 ```
 
-Clone the project. Notice we not use sudo here. The folder has to belong to the Pi user.
+Clone the project. Notice we didn't use sudo here. The folder has to belong to the Pi user.
 ```
 cd /home/pi
 git clone https://github.com/Sispheor/Piclodio2.git
 ```
 
-Option 1 : use django's server to run piclodio
+Option 1 : Use Django's server to run piclodio
 ==========
 
 It's not the best practice but it's easy and fast.
@@ -47,25 +47,22 @@ sudo /etc/init.d/piclodio start
 That's it, you can now access your piclodio at http://youip:8000
 
 
-Option 2 : run piclodio with apache
+Option 2 : Run Piclodio with apache
 ==========
 
 Prerequisites
 ```
 sudo apt-get install apache2 libapache2-mod-wsgi
 ```
-
 Move Piclodio in default apache directory and give access
 ```
 sudo mv /home/pi/Piclodio2 /var/www
 sudo chown -R www-data: /var/www/Piclodio2
 ```
-
 Copy vHost from sources folder into apache vHost configuration folder
 ```
 sudo cp /var/www/Piclodio2/run_piclodio/apache/piclodio.conf /etc/apache2/sites-available/piclodio
 ```
-
 Enable the vHost
 ```
 sudo a2ensite piclodio
