@@ -78,9 +78,13 @@ and add this line at the end of the file
 ```
 www-data ALL=NOPASSWD:/usr/bin/mplayer* ,/usr/bin/pgrep mplayer ,/usr/bin/killall mplayer, /usr/bin/at
 ```
+Add Apache user to audio group to allow him to control sound
+```
+sudo usermod -a -G audio www-data
+```
 Reload Apache
 ```
 sudo service apache2 reload
 ```
 
-That's it! Piclodio is now available on it IP adresse on http://RPI_IP_ADDRESS/piclodio
+That's it! Piclodio is now available on it IP address on **http://RPI_IP_ADDRESS/piclodio**
