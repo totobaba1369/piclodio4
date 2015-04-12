@@ -7,6 +7,7 @@ import subprocess
 from time import strftime
 import time
 import urllib
+from utils.AudioManager import AudioManager
 
 
 def homepage(request):
@@ -61,10 +62,9 @@ def delete_web_radio(request, id_radio):
 
 def options(request):
     # get sound info
-    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    current_volume = subprocess.check_output([script_path, "--getLevel"])
-    current_mute = subprocess.check_output([script_path, "--getSwitch"])
-    current_mute = current_mute.rstrip()
+    am = AudioManager()
+    current_volume = am.get_percent_volume()
+    current_mute = am.get_mute_status()
 
     # get actual mp3 backup file
     actual_backup = _get_mp3_in_backup_folder()
@@ -202,26 +202,26 @@ def deleteAlarmClock(request, id_alarmclock):
 
 
 def volumeup(request, count):
-    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([script_path, "--up", count])
+    am = AudioManager()
+    am.volume_up()
     return redirect('webgui.views.options')
 
 
 def volumedown(request, count):
-    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([script_path, "--down", count])
+    am = AudioManager()
+    am.volume_down()
     return redirect('webgui.views.options')
 
 
 def volumeset(request, volume):
-    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([script_path, "--setLevel", volume])
+    am = AudioManager()
+    am.set_volume(int(volume))
     return redirect('webgui.views.options')
 
 
 def volumetmute(request):
-    script_path = os.path.dirname(os.path.abspath(__file__))+"/utils/picsound.sh"
-    subprocess.call([script_path, "--toggleSwitch"])
+    am = AudioManager()
+    am.togglemute()
     return redirect('webgui.views.options')
 
 

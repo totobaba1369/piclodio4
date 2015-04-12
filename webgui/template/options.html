@@ -15,7 +15,7 @@
                     {% if currentMute == 'on' %}
                         <a href="{% url 'webgui.views.volumetmute' %}"><button type="button" class="btn btn-primary">Click here to mute</button></a>
                     {% else %}
-                       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <a href="{% url 'webgui.views.volumetmute' %}"><button type="button"  class="btn btn-primary">You are muted! Click here to unmute</button></a>
+                        <a href="{% url 'webgui.views.volumetmute' %}"><button type="button"  class="btn btn-warning"><span class="glyphicon glyphicon glyphicon-volume-off" aria-hidden="true"></span> You are muted! Click here to unmute</button></a>
                     {% endif %}
 		</div>
 		<br>
