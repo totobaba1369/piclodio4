@@ -44,7 +44,7 @@
                     </div>
                 {% endif %}
                <!-- actual MP3 -->
-               <div class="well">Actual backup: {{ backup }}</div>
+               <div class="well">Current backup: {{ backup }}</div>
 
                 <form class="form-horizontal" action="{% url 'webgui.views.options' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
                     {% for field in form %}
